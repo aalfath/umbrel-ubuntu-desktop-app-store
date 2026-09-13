@@ -40,11 +40,11 @@ filesystem mounts.
 Chromium/Electron applications such as ChatGPT require unprivileged user
 namespaces for their process sandbox. Docker blocks those namespaces in both
 its default seccomp and AppArmor policies on this host. This app therefore uses
-an explicit seccomp allowlist based on Moby's official default profile (pinned
-from commit `61eaf32614c7c71b60bd8927d3e6a4ffc8ff1f31`) with only `clone`, `clone3`,
-and `unshare` added, and disables Docker's outer AppArmor profile for the
-desktop container. The application-level Chromium sandbox remains enabled;
-do not launch browsers or Electron apps with `--no-sandbox`.
+umbrelOS's host-provided OCI seccomp allowlist at
+`/usr/share/containers/seccomp.json`, which permits namespace creation while
+keeping syscall filtering active, and disables Docker's outer AppArmor profile
+for the desktop container. The application-level Chromium sandbox remains
+enabled; do not launch browsers or Electron apps with `--no-sandbox`.
 
 The AppArmor exception reduces one layer of container isolation. Treat the
 desktop like any machine on your LAN: use it only on a trusted network or

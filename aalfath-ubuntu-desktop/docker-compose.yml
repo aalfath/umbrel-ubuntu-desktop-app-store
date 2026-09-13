@@ -31,7 +31,7 @@ services:
       # Electron apps such as ChatGPT need to create an unprivileged user
       # namespace for their own Chromium sandbox. Docker's default seccomp and
       # AppArmor policies block that operation inside a container.
-      - seccomp=./chromium-seccomp.json
+      - seccomp=/usr/share/containers/seccomp.json
       - apparmor=unconfined
     environment:
       VNC_PW: "${APP_PASSWORD}"
