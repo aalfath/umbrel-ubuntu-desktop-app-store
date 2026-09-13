@@ -4,7 +4,7 @@ name: Ubuntu Desktop
 tagline: A persistent Ubuntu desktop in your browser, powered by KasmVNC
 icon: https://raw.githubusercontent.com/aalfath/umbrel-ubuntu-desktop-app-store/main/aalfath-ubuntu-desktop/icon.svg
 category: files & productivity
-version: "1.18.0-2"
+version: "1.18.0-3"
 port: 3390
 description: >-
   A full Ubuntu Jammy desktop that runs persistently on your Umbrel and is
@@ -16,9 +16,11 @@ description: >-
   Sign in as kasm_user with the per-app password shown by umbrelOS. KasmVNC
   provides responsive browser access, clipboard integration, uploads,
   downloads, and audio support. The kasm-user Linux account has passwordless
-  sudo inside the desktop container. The container remains isolated from the
-  host: it is not run in privileged mode and does not mount Umbrel's Docker
-  socket or host filesystem.
+  sudo inside the desktop container. The container remains non-privileged and
+  does not mount Umbrel's Docker socket or host filesystem. To support the
+  Chromium sandbox used by Electron applications such as ChatGPT, the desktop
+  uses a custom Moby seccomp allowlist that permits user-namespace creation and
+  runs without Docker's outer AppArmor profile.
 
 
   This app is intended for trusted local networks or access through a private
@@ -33,9 +35,11 @@ repo: https://github.com/kasmtech/workspaces-images
 support: https://github.com/aalfath/umbrel-ubuntu-desktop-app-store/issues
 gallery: []
 releaseNotes: >-
-  Adds passwordless sudo access for the kasm-user Linux account. Run commands
-  with sudo in the desktop terminal; no root password is required. This patch
-  supports both fresh installations and updates of an existing installation.
+  Fixes the "No usable sandbox" crash in Chromium/Electron applications such
+  as ChatGPT. The desktop now permits unprivileged user namespaces through a
+  narrowly extended Moby seccomp allowlist. Docker's per-container AppArmor
+  profile is disabled because it otherwise blocks the same namespace operation;
+  the container remains non-privileged with no Docker socket or host mounts.
 dependencies: []
 path: ""
 defaultUsername: "kasm_user"

@@ -35,9 +35,21 @@ persistent.
 KasmVNC authentication is enabled with Umbrel's generated deterministic app
 password. Although `kasm-user` can become root inside its own container, the
 container is not run in Docker privileged mode and has no Docker socket or host
-filesystem mounts. Treat the desktop like any machine on your LAN: use it only
-on a trusted network or through a private VPN, keep umbrelOS updated, and do
-not port-forward it directly to the internet.
+filesystem mounts.
+
+Chromium/Electron applications such as ChatGPT require unprivileged user
+namespaces for their process sandbox. Docker blocks those namespaces in both
+its default seccomp and AppArmor policies on this host. This app therefore uses
+an explicit seccomp allowlist based on Moby's official default profile (pinned
+from commit `61eaf32614c7c71b60bd8927d3e6a4ffc8ff1f31`) with only `clone`, `clone3`,
+and `unshare` added, and disables Docker's outer AppArmor profile for the
+desktop container. The application-level Chromium sandbox remains enabled;
+do not launch browsers or Electron apps with `--no-sandbox`.
+
+The AppArmor exception reduces one layer of container isolation. Treat the
+desktop like any machine on your LAN: use it only on a trusted network or
+through a private VPN, keep umbrelOS updated, and do not port-forward it
+directly to the internet.
 
 ## Development and tests
 
@@ -51,7 +63,7 @@ Compose validation in GitHub Actions. To run the checks locally:
 
 For a runtime smoke test, start the Compose stack with Umbrel-style test
 environment values and verify the authenticated KasmVNC endpoint, passwordless
-sudo, and persistent home storage:
+sudo, Chromium-compatible user namespaces, and persistent home storage:
 
 ```sh
 ./tests/smoke.sh

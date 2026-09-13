@@ -27,6 +27,12 @@ services:
   desktop:
     image: kasmweb/ubuntu-jammy-desktop:1.18.0@sha256:b45005715f762b34d7868c57c32316a0117eb1358c90c64dbbcbe30c136095b5
     shm_size: "1gb"
+    security_opt:
+      # Electron apps such as ChatGPT need to create an unprivileged user
+      # namespace for their own Chromium sandbox. Docker's default seccomp and
+      # AppArmor policies block that operation inside a container.
+      - seccomp=./chromium-seccomp.json
+      - apparmor=unconfined
     environment:
       VNC_PW: "${APP_PASSWORD}"
       TZ: "${TZ:-Etc/UTC}"

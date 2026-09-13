@@ -44,6 +44,8 @@ test "$anonymous_status" = "401"
 test "$authenticated_status" = "200"
 test "$($compose exec -T desktop sudo -n whoami)" = "root"
 test "$($compose exec -T desktop stat -c '%U:%G:%a' /etc/sudoers.d/umbrel-kasm-user)" = "root:root:440"
+test "$($compose exec -T desktop sh -c 'grep "^Seccomp:[[:space:]]*2$" /proc/self/status')" = "Seccomp:	2"
+$compose exec -T desktop unshare --user --map-root-user true
 
 $compose exec -T desktop sh -c \
   'printf umbrel-persistence-ok > /home/kasm-user/.umbrel-persistence-test'
@@ -59,4 +61,4 @@ done
 test "${health:-}" = "healthy"
 test "$($compose exec -T desktop cat /home/kasm-user/.umbrel-persistence-test)" = "umbrel-persistence-ok"
 
-echo "Runtime smoke test passed: authentication, sudo, and persistence"
+echo "Runtime smoke test passed: authentication, sudo, Chromium sandbox namespaces, and persistence"
