@@ -18,5 +18,7 @@ test "$(yq '.deterministicPassword' "$app")" = "true"
 test "$(yq '.services.app_proxy.environment.APP_PORT' "$compose")" = "8080"
 test "$(yq '.services.desktop.environment.VNC_PW' "$compose")" = '${APP_PASSWORD}'
 test "$(yq '.services.desktop.volumes[0]' "$compose")" = '${APP_DATA_DIR}/data/home:/home/kasm-user'
+test "$(yq '.services.desktop.volumes[1]' "$compose")" = '${APP_DATA_DIR}/sudoers:/etc/sudoers.d/umbrel-kasm-user:ro'
+test "$(cat aalfath-ubuntu-desktop/sudoers)" = 'kasm-user ALL=(ALL:ALL) NOPASSWD: ALL'
 
 echo "Manifest validation passed"

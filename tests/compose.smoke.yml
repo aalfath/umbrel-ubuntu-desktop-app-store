@@ -1,3 +1,5 @@
+name: aalfath-ubuntu-desktop-smoke
+
 services:
   app_proxy:
     image: alpine:3.22.1

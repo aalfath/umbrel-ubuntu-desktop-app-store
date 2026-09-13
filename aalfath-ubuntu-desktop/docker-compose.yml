@@ -12,9 +12,15 @@ services:
     command:
       - /bin/sh
       - -c
-      - mkdir -p /data/home && chown 1000:0 /data /data/home && chmod 0775 /data /data/home
+      - >-
+        mkdir -p /data/home &&
+        chown 1000:0 /data /data/home &&
+        chmod 0775 /data /data/home &&
+        chown 0:0 /config/umbrel-kasm-user &&
+        chmod 0440 /config/umbrel-kasm-user
     volumes:
       - ${APP_DATA_DIR}/data:/data
+      - ${APP_DATA_DIR}/sudoers:/config/umbrel-kasm-user
     restart: "no"
 
   desktop:
@@ -25,6 +31,7 @@ services:
       TZ: "${TZ:-Etc/UTC}"
     volumes:
       - ${APP_DATA_DIR}/data/home:/home/kasm-user
+      - ${APP_DATA_DIR}/sudoers:/etc/sudoers.d/umbrel-kasm-user:ro
     depends_on:
       volume-init:
         condition: service_completed_successfully

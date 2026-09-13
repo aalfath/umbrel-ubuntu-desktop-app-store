@@ -25,11 +25,19 @@ Umbrel data directory. Documents, settings, browser profiles, and per-user
 software therefore survive restarts and upgrades. Uninstalling the app from
 umbrelOS removes its application data after Umbrel's normal confirmation.
 
+The Linux account inside the desktop is named `kasm-user` and has passwordless
+sudo access. Run administrative commands with `sudo`; there is no root
+password. Packages installed into the container's system directories with
+`apt` survive normal restarts, but not an app update that replaces the
+container. Files and per-user applications stored in the home directory remain
+persistent.
+
 KasmVNC authentication is enabled with Umbrel's generated deterministic app
-password. The container is intentionally unprivileged and has no Docker socket
-or host filesystem mounts. Treat the desktop like any machine on your LAN: use
-it only on a trusted network or through a private VPN, keep umbrelOS updated,
-and do not port-forward it directly to the internet.
+password. Although `kasm-user` can become root inside its own container, the
+container is not run in Docker privileged mode and has no Docker socket or host
+filesystem mounts. Treat the desktop like any machine on your LAN: use it only
+on a trusted network or through a private VPN, keep umbrelOS updated, and do
+not port-forward it directly to the internet.
 
 ## Development and tests
 
@@ -42,9 +50,15 @@ Compose validation in GitHub Actions. To run the checks locally:
 ```
 
 For a runtime smoke test, start the Compose stack with Umbrel-style test
-environment values and verify the authenticated KasmVNC endpoint through the
-TLS bridge. The CI checks deliberately avoid pulling the multi-gigabyte desktop
-image on every commit.
+environment values and verify the authenticated KasmVNC endpoint, passwordless
+sudo, and persistent home storage:
+
+```sh
+./tests/smoke.sh
+```
+
+The CI checks deliberately avoid pulling the multi-gigabyte desktop image on
+every commit.
 
 ## Upstream
 
