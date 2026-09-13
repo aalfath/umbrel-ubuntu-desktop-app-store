@@ -16,11 +16,12 @@ services:
         mkdir -p /data/home &&
         chown 1000:0 /data /data/home &&
         chmod 0775 /data /data/home &&
-        chown 0:0 /config/umbrel-kasm-user &&
-        chmod 0440 /config/umbrel-kasm-user
+        printf '%s\n' 'kasm-user ALL=(ALL:ALL) NOPASSWD: ALL' > /sudoers.d/umbrel-kasm-user &&
+        chown 0:0 /sudoers.d/umbrel-kasm-user &&
+        chmod 0440 /sudoers.d/umbrel-kasm-user
     volumes:
       - ${APP_DATA_DIR}/data:/data
-      - ${APP_DATA_DIR}/sudoers:/config/umbrel-kasm-user
+      - ${APP_DATA_DIR}/sudoers.d:/sudoers.d
     restart: "no"
 
   desktop:
@@ -31,7 +32,7 @@ services:
       TZ: "${TZ:-Etc/UTC}"
     volumes:
       - ${APP_DATA_DIR}/data/home:/home/kasm-user
-      - ${APP_DATA_DIR}/sudoers:/etc/sudoers.d/umbrel-kasm-user:ro
+      - ${APP_DATA_DIR}/sudoers.d:/etc/sudoers.d:ro
     depends_on:
       volume-init:
         condition: service_completed_successfully

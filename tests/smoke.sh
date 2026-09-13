@@ -8,6 +8,8 @@ export APP_DATA_DIR="$repo_dir/.smoke-test"
 compose="docker compose --project-name aalfath-ubuntu-desktop-smoke --env-file tests/smoke.env -f aalfath-ubuntu-desktop/docker-compose.yml -f tests/compose.smoke.yml"
 
 cleanup() {
+  $compose run --rm --no-deps --entrypoint /bin/sh volume-init \
+    -c 'chown -R 1000:0 /data /sudoers.d' >/dev/null 2>&1 || true
   $compose down >/dev/null 2>&1 || true
   find "$APP_DATA_DIR" -depth -delete 2>/dev/null || true
 }
@@ -15,7 +17,6 @@ trap cleanup EXIT INT TERM
 
 mkdir -p "$APP_DATA_DIR"
 cp aalfath-ubuntu-desktop/nginx.conf "$APP_DATA_DIR/nginx.conf"
-cp aalfath-ubuntu-desktop/sudoers "$APP_DATA_DIR/sudoers"
 
 $compose up -d
 

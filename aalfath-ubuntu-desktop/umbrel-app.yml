@@ -4,7 +4,7 @@ name: Ubuntu Desktop
 tagline: A persistent Ubuntu desktop in your browser, powered by KasmVNC
 icon: https://raw.githubusercontent.com/aalfath/umbrel-ubuntu-desktop-app-store/main/aalfath-ubuntu-desktop/icon.svg
 category: files & productivity
-version: "1.18.0-1"
+version: "1.18.0-2"
 port: 3390
 description: >-
   A full Ubuntu Jammy desktop that runs persistently on your Umbrel and is
@@ -34,7 +34,8 @@ support: https://github.com/aalfath/umbrel-ubuntu-desktop-app-store/issues
 gallery: []
 releaseNotes: >-
   Adds passwordless sudo access for the kasm-user Linux account. Run commands
-  with sudo in the desktop terminal; no root password is required.
+  with sudo in the desktop terminal; no root password is required. This patch
+  supports both fresh installations and updates of an existing installation.
 dependencies: []
 path: ""
 defaultUsername: "kasm_user"
