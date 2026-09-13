@@ -25,6 +25,8 @@ test "$(yq '.services.desktop.security_opt[1]' "$compose")" = 'apparmor=unconfin
 test "$(yq '.services.volume-init.volumes[1]' "$compose")" = '${APP_DATA_DIR}/sudoers.d:/sudoers.d'
 test "$(yq '.services.volume-init.command[2]' "$compose" | grep -c 'kasm-user ALL=(ALL:ALL) NOPASSWD: ALL')" = "1"
 namespace_syscalls=$(yq '.syscalls[] | select(.comment == "Allow Chromium and Electron to create their own unprivileged user-namespace sandbox.") | .names | join(",")' aalfath-ubuntu-desktop/chromium-seccomp.json)
+namespace_syscalls=${namespace_syscalls#\"}
+namespace_syscalls=${namespace_syscalls%\"}
 test "$namespace_syscalls" = "clone,clone3,unshare"
 
 echo "Manifest validation passed"
