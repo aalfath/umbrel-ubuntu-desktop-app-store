@@ -8,7 +8,7 @@ compose="aalfath-ubuntu-desktop/docker-compose.yml"
 yq eval '.' "$store" >/dev/null
 yq eval '.' "$app" >/dev/null
 yq eval '.' "$compose" >/dev/null
-jq empty aalfath-ubuntu-desktop/chromium-seccomp.json
+yq eval '.' aalfath-ubuntu-desktop/chromium-seccomp.json >/dev/null
 
 test "$(yq '.id' "$store")" = "aalfath"
 test "$(yq '.id' "$app")" = "aalfath-ubuntu-desktop"
@@ -24,8 +24,7 @@ test "$(yq '.services.desktop.security_opt[0]' "$compose")" = 'seccomp=./chromiu
 test "$(yq '.services.desktop.security_opt[1]' "$compose")" = 'apparmor=unconfined'
 test "$(yq '.services.volume-init.volumes[1]' "$compose")" = '${APP_DATA_DIR}/sudoers.d:/sudoers.d'
 test "$(yq '.services.volume-init.command[2]' "$compose" | grep -c 'kasm-user ALL=(ALL:ALL) NOPASSWD: ALL')" = "1"
-test "$(jq '[.syscalls[] | select(.action == "SCMP_ACT_ALLOW") | .names[]] | any(. == "clone")' aalfath-ubuntu-desktop/chromium-seccomp.json)" = "true"
-test "$(jq '[.syscalls[] | select(.action == "SCMP_ACT_ALLOW") | .names[]] | any(. == "clone3")' aalfath-ubuntu-desktop/chromium-seccomp.json)" = "true"
-test "$(jq '[.syscalls[] | select(.action == "SCMP_ACT_ALLOW") | .names[]] | any(. == "unshare")' aalfath-ubuntu-desktop/chromium-seccomp.json)" = "true"
+namespace_syscalls=$(yq '.syscalls[] | select(.comment == "Allow Chromium and Electron to create their own unprivileged user-namespace sandbox.") | .names | join(",")' aalfath-ubuntu-desktop/chromium-seccomp.json)
+test "$namespace_syscalls" = "clone,clone3,unshare"
 
 echo "Manifest validation passed"
