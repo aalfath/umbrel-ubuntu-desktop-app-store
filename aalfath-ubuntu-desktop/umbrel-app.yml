@@ -1,0 +1,39 @@
+manifestVersion: 1
+id: aalfath-ubuntu-desktop
+name: Ubuntu Desktop
+tagline: A persistent Ubuntu desktop in your browser, powered by KasmVNC
+icon: https://raw.githubusercontent.com/aalfath/umbrel-ubuntu-desktop-app-store/main/aalfath-ubuntu-desktop/icon.svg
+category: files & productivity
+version: "1.18.0"
+port: 3390
+description: >-
+  A full Ubuntu Jammy desktop that runs persistently on your Umbrel and is
+  available from any modern browser through KasmVNC. Your home directory,
+  settings, documents, downloads, and installed per-user applications survive
+  container restarts and app updates.
+
+
+  Sign in as kasm_user with the per-app password shown by umbrelOS. KasmVNC
+  provides responsive browser access, clipboard integration, uploads,
+  downloads, and audio support. The desktop is isolated from the host: it does
+  not mount Umbrel's Docker socket and is not granted privileged access.
+
+
+  This app is intended for trusted local networks or access through a private
+  VPN. Do not forward its port directly to the public internet. The image is
+  large (approximately 4 GB compressed), so the first installation can take
+  several minutes and requires sufficient free storage.
+developer: Kasm Technologies
+website: https://www.kasmweb.com/
+submitter: aalfath
+submission: https://github.com/aalfath/umbrel-ubuntu-desktop-app-store
+repo: https://github.com/kasmtech/workspaces-images
+support: https://github.com/aalfath/umbrel-ubuntu-desktop-app-store/issues
+gallery: []
+releaseNotes: >-
+  Initial release based on the stable Kasm Ubuntu Jammy Desktop 1.18.0 image,
+  with persistent home storage and generated-password authentication.
+dependencies: []
+path: ""
+defaultUsername: "kasm_user"
+deterministicPassword: true

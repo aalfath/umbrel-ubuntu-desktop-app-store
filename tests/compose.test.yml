@@ -1,0 +1,4 @@
+services:
+  app_proxy:
+    image: alpine:3.22.1
+    command: ["true"]

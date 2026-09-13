@@ -1,0 +1,20 @@
+name: Test
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate Umbrel manifests
+        uses: mikefarah/yq@v4.47.2
+        with:
+          cmd: ./tests/validate-manifests.sh
+      - name: Validate Docker Compose
+        run: ./tests/validate-compose.sh

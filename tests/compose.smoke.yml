@@ -1,0 +1,8 @@
+services:
+  app_proxy:
+    image: alpine:3.22.1
+    command: ["true"]
+
+  tls-bridge:
+    ports:
+      - "127.0.0.1:13390:8080"
